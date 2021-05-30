@@ -1,0 +1,276 @@
+syntax = "proto3";
+
+option go_package = "./;ex";
+
+package ex;
+
+// 通知
+message ClientStream {
+}
+message ServerStream {
+  bytes stream = 1;
+}
+service Notify {
+  rpc Notify(ClientStream) returns (stream ServerStream);
+}
+
+// 主要事件
+service Lobby {
+  // 登录
+	rpc login (ReqLogin) returns (ResLogin);
+	rpc oauth2Login (ReqOauth2Login) returns (ResLogin);
+  // 登出
+  rpc logout (ReqLogout) returns (ResLogout);
+	rpc softLogout (ReqLogout) returns (ResLogout);
+	// 获取账号数据
+	rpc fetchAccountInfo (ReqAccountInfo) returns (ResAccountInfo);
+	// 领取月卡
+	rpc takeMonthTicket (ReqCommon) returns (ResPayMonthTicket);
+}
+
+message Account {
+	uint32 account_id = 1;
+	string nickname = 2;
+	uint32 login_time = 3;
+	uint32 logout_time = 4;
+	uint32 room_id = 5;
+	AntiAddiction anti_addiction = 6;
+	uint32 title = 7;
+	string signature = 8;
+	string email = 9;
+	uint32 email_verify = 10;
+	uint32 gold = 11;
+	uint32 diamond = 12;
+	uint32 avatar_id = 13;
+	uint32 vip = 14;
+	int32 birthday = 15;
+	string phone = 16;
+	uint32 phone_verify = 17;
+	repeated PlatformDiamond platform_diamond = 18;
+	AccountLevel level = 21;
+	AccountLevel level3 = 22;
+	uint32 avatar_frame = 23;
+	uint32 skin_ticket = 24;
+	repeated PlatformSkinTicket platform_skin_ticket = 25;
+	uint32 verified = 26;
+	repeated ChallengeLevel challenge_levels = 27;
+	repeated AchievementCount achievement_count = 28;
+	uint32 frozen_state = 29;
+	message AchievementCount {
+		uint32 rare = 1;
+		uint32 count = 2;
+	}
+	message ChallengeLevel {
+		uint32 season = 1;
+		uint32 level = 2;
+		uint32 rank = 3;
+	}
+	message PlatformDiamond {
+		uint32 id = 1;
+		uint32 count = 2;
+	}
+	message PlatformSkinTicket {
+		uint32 id = 1;
+		uint32 count = 2;
+	}
+}
+
+message GameConnectInfo {
+	string connect_token = 2;
+	string game_uuid = 3;
+	string location = 4;
+}
+
+message AntiAddiction {
+	uint32 online_duration = 1;
+}
+
+message AccountLevel {
+	uint32 id = 1;
+	uint32 score = 2;
+}
+
+message Room {
+	uint32 room_id = 1;
+	uint32 owner_id = 2;
+	GameMode mode = 3;
+	uint32 max_player_count = 4;
+	repeated PlayerGameView persons = 5;
+	repeated uint32 ready_list = 6;
+	bool is_playing = 7;
+	bool public_live = 8;
+	uint32 robot_count = 9;
+	uint32 tournament_id = 10;
+	uint32 seq = 11;
+}
+
+message GameMode {
+	uint32 mode = 1;
+	bool ai = 4;
+	string extendinfo = 5;
+	GameDetailRule detail_rule = 6;
+	GameTestingEnvironmentSet testing_environment = 7;
+	GameSetting game_setting = 8;
+}
+
+message PlayerGameView {
+	uint32 account_id = 1;
+	uint32 avatar_id = 2;
+	uint32 title = 3;
+	string nickname = 4;
+	AccountLevel level = 5;
+	Character character = 6;
+	AccountLevel level3 = 7;
+	uint32 avatar_frame = 8;
+	uint32 verified = 9;
+	repeated ViewSlot views = 10;
+}
+
+message GameDetailRule {
+	uint32 time_fixed = 1;
+	uint32 time_add = 2;
+	uint32 dora_count = 3;
+	uint32 shiduan = 4;
+	uint32 init_point = 5;
+	uint32 fandian = 6;
+	bool can_jifei = 7;
+	uint32 tianbian_value = 8;
+	uint32 liqibang_value = 9;
+	uint32 changbang_value = 10;
+	uint32 noting_fafu_1 = 11;
+	uint32 noting_fafu_2 = 12;
+	uint32 noting_fafu_3 = 13;
+	bool have_liujumanguan = 14;
+	bool have_qieshangmanguan = 15;
+	bool have_biao_dora = 16;
+	bool have_gang_biao_dora = 17;
+	bool ming_dora_immediately_open = 18;
+	bool have_li_dora = 19;
+	bool have_gang_li_dora = 20;
+	bool have_sifenglianda = 21;
+	bool have_sigangsanle = 22;
+	bool have_sijializhi = 23;
+	bool have_jiuzhongjiupai = 24;
+	bool have_sanjiahele = 25;
+	bool have_toutiao = 26;
+	bool have_helelianzhuang = 27;
+	bool have_helezhongju = 28;
+	bool have_tingpailianzhuang = 29;
+	bool have_tingpaizhongju = 30;
+	bool have_yifa = 31;
+	bool have_nanruxiru = 32;
+	uint32 jingsuanyuandian = 33;
+	int32 shunweima_2 = 34;
+	int32 shunweima_3 = 35;
+	int32 shunweima_4 = 36;
+	bool bianjietishi = 37;
+	uint32 ai_level = 38;
+	bool have_zimosun = 39;
+	bool disable_multi_yukaman = 40;
+	uint32 fanfu = 41;
+	uint32 guyi_mode = 42;
+	uint32 dora3_mode = 43;
+	uint32 begin_open_mode = 44;
+	uint32 jiuchao_mode = 45;
+	uint32 muyu_mode = 46;
+	uint32 open_hand = 47;
+	uint32 xuezhandaodi = 48;
+	uint32 huansanzhang = 49;
+	uint32 chuanma = 50;
+	bool disable_leijiyiman = 60;
+}
+
+message GameTestingEnvironmentSet {
+	uint32 paixing = 1;
+	uint32 left_count = 2;
+}
+
+message GameSetting {
+	uint32 emoji_switch = 1;
+}
+
+message Character {
+	uint32 charid = 1;
+	uint32 level = 2;
+	uint32 exp = 3;
+	repeated ViewSlot views = 4;
+	uint32 skin = 5;
+	bool is_upgraded = 6;
+	repeated uint32 extra_emoji = 7;
+}
+
+message ViewSlot {
+	uint32 slot = 1;
+	uint32 item_id = 2;
+}
+
+message MonthTicketInfo {
+	uint32 id = 1;
+	uint32 end_time = 2;
+	uint32 last_pay_time = 3;
+}
+
+message ServerChan {
+	uint32 type = 1;
+	string sendkey = 2;
+}
+
+message ReqLogin {
+	string account = 1;
+	string password = 2;
+	bool reconnect = 3;
+	ServerChan server_chan = 4;
+}
+
+message ResLogin {
+	Error error = 1;
+	uint32 account_id = 2;
+	Account account = 3;
+	GameConnectInfo game_info = 4;
+	bool has_unread_announcement = 5;
+	string access_token = 6;
+	uint32 signup_time = 7;
+	bool is_id_card_authed = 8;
+	string country = 9;
+	repeated uint32 logined_version = 10;
+	repeated uint32 rewarded_version = 11;
+}
+
+message ReqLogout {
+}
+
+message ResLogout {
+	Error error = 1;
+}
+
+message ReqAccountInfo {
+	uint32 account_id = 1;
+}
+
+message ResAccountInfo {
+	Error error = 1;
+	Account account = 2;
+	Room room = 3;
+}
+
+message ReqCommon {
+}
+
+message ResPayMonthTicket {
+	Error error = 1;
+	uint32 resource_id = 2;
+	uint32 resource_count = 3;
+}
+
+message ReqOauth2Login {
+	string access_token = 1;
+	bool reconnect = 2;
+	ServerChan server_chan = 3;
+}
+
+message Error {
+	uint32 code = 1;
+	repeated uint32 u32_params = 2;
+	repeated string str_params = 3;
+	string json_param = 4;
+}
