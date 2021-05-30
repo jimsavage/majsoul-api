@@ -10,10 +10,10 @@
 
 ```golang
 var (
-Account  = "账号"
-Password = "密码"
-_        = "Token"
-URL      = "majserver.sykj.site"
+	Account  = "账号"
+	Password = "密码"
+	_        = "Token"
+	URL      = "majserver.sykj.site"
 )
 
 // 从雀魂Ex官方获取Client端证书
