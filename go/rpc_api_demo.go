@@ -398,7 +398,7 @@ func main() {
 
 	conn, err := grpc.Dial(URL+":20009", grpc.WithTransportCredentials(creds))
 	if err != nil {
-		log.Fatal("[登录失败]: ", err)
+		log.Fatal("[登录失败1]: ", err)
 	}
 	defer conn.Close()
 
@@ -415,7 +415,7 @@ func main() {
 	// AccessToken登录
 	// respLogin, err := lobby.Oauth2Login(context.Background(), &ReqOauth2Login{AccessToken: AccessToken})
 	if err != nil {
-		log.Fatal("[登录失败]: ", err)
+		log.Fatal("[登录失败2]: ", err)
 	}
 
 	PostToHelper(respLogin)
@@ -716,6 +716,9 @@ func main() {
 			}
 			lobby.JoinRoom(context.Background(), &ReqJoinRoom{RoomId: uint32(roomid)})
 			lobby.ReadyPlay(context.Background(), &ReqRoomReady{Ready: true})
+		}
+		if strings.Contains(line, "leave") {
+			lobby.LeaveRoom(context.Background(), &ReqCommon{})
 		}
 		if strings.Contains(line, "ready") {
 			lobby.ReadyPlay(context.Background(), &ReqRoomReady{Ready: true})

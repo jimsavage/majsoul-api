@@ -97,8 +97,8 @@ service FastTest {
 	rpc authGame (ReqAuthGame) returns (ResAuthGame);
 	// 例:
 	// fast.AuthGame(context.Background(), &ReqAuthGame{
-	//	 AccountId: respLogin.GetAccountId(), // 登录时获取的AccountId
-	//	 Token:     ConnectToken,						  // NotifyRoomGameStart 或 NotifyMatchGameStart 时获取的 ConnectToken
+	//	 AccountId: respLogin.GetAccountId(),	// 登录时获取的AccountId
+	//	 Token:     ConnectToken,							// NotifyRoomGameStart 或 NotifyMatchGameStart 时获取的 ConnectToken
 	//	 GameUuid:  GameUuid,									// 同上
 	// })
 
@@ -106,15 +106,15 @@ service FastTest {
 	rpc authObserve (ReqAuthObserve) returns (ResCommon);
 	// 例:
 	// fast.AuthObserve(context.Background(), &ReqAuthObserve{
-	// 	Token: "", // 暂时未知参数
+	// 	Token: "",	// 暂时未知参数
 	// })
 
 	// 游戏内通知, 例如玩家发表情等
 	rpc broadcastInGame (ReqBroadcastInGame) returns (ResCommon);
 	// 例:
 	// fast.BroadcastInGame(context.Background(), &ReqBroadcastInGame{
-	//	 Content: "",			  // 暂时未知参数
-	//	 ExceptSelf: false, // 暂时未知参数
+	//	 Content: "",				// 暂时未知参数
+	//	 ExceptSelf: false,	// 暂时未知参数
 	// })
 
 	// 检查网络延迟
@@ -161,7 +161,7 @@ service FastTest {
 	rpc inputGameGMCommand (ReqGMCommandInGaming) returns (ResCommon);
 	// 例:
 	// fast.InputGameGMCommand(context.Background(), &ReqGMCommandInGaming{
-	// 	JsonData: "", // 暂时未知参数
+	// 	JsonData: "",	// 暂时未知参数
 	// })
 
 	// 普通操作, 例如: 打牌、立直等
@@ -195,8 +195,8 @@ service FastTest {
 	rpc syncGame (ReqSyncGame) returns (ResSyncGame);
 	// 例:
 	// fast.SyncGame(context.Background(), &ReqSyncGame{
-	// 	RoundId: "", // 暂时未知参数
-	// 	Step:    0,  // 暂时未知参数
+	// 	RoundId: "",	// 暂时未知参数
+	// 	Step:    0,		// 暂时未知参数
 	// })
 
 	// 结束游戏(仅友人房可以)
@@ -208,7 +208,7 @@ service FastTest {
 	rpc voteGameEnd (ReqVoteGameEnd) returns (ResGameEndVote);
 	// 例:
 	// fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{
-	// 	Yes: true, // 同意结束
+	// 	Yes: true,	// 同意结束
 	// })
 }
 ```
@@ -217,8 +217,11 @@ service FastTest {
 
 ```protobuf
 service Lobby {
+	// 软登出(不销毁AccessToken)
 	rpc softLogout (ReqLogout) returns (ResLogout);
+	// 领取月卡
 	rpc takeMonthTicket (ReqCommon) returns (ResPayMonthTicket);
+
 	rpc addCollectedGameRecord (ReqAddCollectedGameRecord) returns (ResAddCollectedGameRecord);
 	rpc addFinishedEnding (ReqFinishedEnding) returns (ResCommon);
 	rpc applyFriend (ReqApplyFriend) returns (ResCommon);
