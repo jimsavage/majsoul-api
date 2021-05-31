@@ -483,7 +483,8 @@ func main() {
 			for {
 				in, err := notifyClient.Recv()
 				if err != nil {
-					break
+					log.Println("rec err:", err)
+					continue
 				}
 				// 收到的是 byte 数据
 				// 解析方法:
@@ -517,6 +518,25 @@ func main() {
 					ConnectToken = msg.GetConnectToken()
 					GameUuid = msg.GetGameUuid()
 					log.Println("Notify Wrapper.NotifyRoomGameStart:", msg)
+					if ConnectToken == "" || GameUuid == "" {
+						log.Println("未能获取到连接对局服务器信息")
+						continue
+					}
+					// time.Sleep(time.Second)
+					// 验证对局信息
+					respAuthGame, err := fast.AuthGame(context.Background(), &ReqAuthGame{
+						AccountId: respLogin.GetAccountId(),
+						Token:     ConnectToken,
+						GameUuid:  GameUuid,
+					})
+					PostToHelper(respAuthGame)
+					log.Println("AuthGame", respLogin.GetAccountId(), ConnectToken, GameUuid, respAuthGame, err)
+					// time.Sleep(time.Second)
+					// 进入对局
+					respEnterGame, err := fast.EnterGame(context.Background(), &ReqCommon{})
+					PostToHelper(respEnterGame)
+					log.Println("EnterGame", respEnterGame, err)
+					log.Println("进入对局...")
 				case "NotifyMatchGameStart":
 					msg := &NotifyMatchGameStart{}
 					err = proto.Unmarshal(wrapper.GetData(), msg)
@@ -527,11 +547,7 @@ func main() {
 					ConnectToken = msg.GetConnectToken()
 					GameUuid = msg.GetGameUuid()
 					log.Println("Notify Wrapper.NotifyRoomGameStart:", msg)
-				case "NotifyGameConnect": // 收到此消息说明已经连接上对局服务器, 服务端自动连接不用操心
-					if ConnectToken == "" || GameUuid == "" {
-						log.Println("未能获取到连接对局服务器信息")
-						continue
-					}
+					// time.Sleep(time.Second)
 					// 验证对局信息
 					respAuthGame, err := fast.AuthGame(context.Background(), &ReqAuthGame{
 						AccountId: respLogin.GetAccountId(),
@@ -539,17 +555,19 @@ func main() {
 						GameUuid:  GameUuid,
 					})
 					PostToHelper(respAuthGame)
-					log.Println("AuthGame", respAuthGame, err)
+					log.Println("AuthGame", respLogin.GetAccountId(), ConnectToken, GameUuid, respAuthGame, err)
+					// time.Sleep(time.Second)
 					// 进入对局
 					respEnterGame, err := fast.EnterGame(context.Background(), &ReqCommon{})
 					PostToHelper(respEnterGame)
 					log.Println("EnterGame", respEnterGame, err)
 					log.Println("进入对局...")
-				case "NotifyGameEndResult": // 对局结束
+				case "NotifyLeaderboardPoint": // 对局结束
 					// 进行匹配
-					// lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
+					// respMatchGame, err := lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
 					// 	MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
 					// })
+					// log.Println("MatchGame", respMatchGame, err)
 					continue
 				case "ActionNewRound":
 					msg := &ActionNewRound{}
@@ -669,6 +687,21 @@ func main() {
 		if err != nil {
 			log.Println(lobby.SoftLogout(context.Background(), &ReqLogout{}))
 			break
+		}
+		if strings.Contains(line, "pipei") {
+			log.Println(lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
+				MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
+			}))
+		}
+		if strings.Contains(line, "cancel") {
+			lobby.CancelMatch(context.Background(), &ReqCancelMatchQueue{
+				MatchMode: 40,
+			})
+		}
+		if strings.Contains(line, "vote") {
+			fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{
+				Yes: true,
+			})
 		}
 		if strings.Contains(line, "joinroom") {
 			arr := strings.Split(strings.Trim(line, "\n"), " ")
