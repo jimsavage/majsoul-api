@@ -288,8 +288,8 @@ func doOp(op *OptionalOperationList, tile string) {
 				Timeuse:         timeuse,
 			})
 			// fast.InputOperation(context.Background(), &ReqSelfOperation{
-			// 	CancelOperation: true,
-			// 	Timeuse:         1,
+			//   CancelOperation: true,
+			//   Timeuse:         1,
 			// })
 		// 荣和
 		case E_PlayOperation_Ron:
@@ -339,15 +339,15 @@ func doOp(op *OptionalOperationList, tile string) {
 			log.Println(tile, respDiscard, err)
 		// 拔北
 		// case E_PlayOperation_Kita:
-		// 	fast.InputOperation(context.Background(), &ReqSelfOperation{
-		// 		Type: E_PlayOperation_Kita,
-		// 		// !!! 真实情况中请根据是否是刚摸来的牌进行判断
-		// 		// !!! 如果是刚摸来的牌直接打出去则Moqie为true
-		// 		// !!! 请勿随便传, 否则会无法出牌
-		// 		// !!! 这里因为是Demo所以直接把摸来的牌摸切出去了
-		// 		Moqie:   !!!,
-		// 		Timeuse: timeuse,
-		// 	})
+		//   fast.InputOperation(context.Background(), &ReqSelfOperation{
+		//     Type: E_PlayOperation_Kita,
+		//     // !!! 真实情况中请根据是否是刚摸来的牌进行判断
+		//     // !!! 如果是刚摸来的牌直接打出去则Moqie为true
+		//     // !!! 请勿随便传, 否则会无法出牌
+		//     // !!! 这里因为是Demo所以直接把摸来的牌摸切出去了
+		//     Moqie:   !!!,
+		//     Timeuse: timeuse,
+		//   })
 		// 换三张
 		case E_PlayOperation_HuanSanZhang:
 			fast.InputOperation(context.Background(), &ReqSelfOperation{
@@ -445,8 +445,8 @@ func main() {
 
 	// 从杂货铺用铜币购买一个猫粮小本子
 	// lobby.BuyFromZHP(context.Background(), &ReqBuyFromZHP{
-	// 	GoodsId: 7,
-	// 	Count:   1,
+	//   GoodsId: 7,
+	//   Count:   1,
 	// })
 
 	// 领取复活币
@@ -454,15 +454,15 @@ func main() {
 
 	// 赠送礼物给五十岚阳菜
 	// lobby.SendGiftToCharacter(context.Background(), &ReqSendGiftToCharacter{
-	// 	CharacterId: 200020,
-	// 	Gifts: []*ReqSendGiftToCharacter_Gift{
-	// 		{ItemId: 303062, Count: 1},
-	// 	},
+	//   CharacterId: 200020,
+	//   Gifts: []*ReqSendGiftToCharacter_Gift{
+	//     {ItemId: 303062, Count: 1},
+	//   },
 	// })
 
 	// 进行匹配
 	// lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
-	// 	MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
+	//   MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
 	// })
 
 	// FastClient 出牌操作
@@ -565,7 +565,7 @@ func main() {
 				case "NotifyLeaderboardPoint": // 对局结束
 					// 进行匹配
 					// respMatchGame, err := lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
-					// 	MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
+					//   MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
 					// })
 					// log.Println("MatchGame", respMatchGame, err)
 					continue
