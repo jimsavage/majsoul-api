@@ -92,6 +92,7 @@ if err == nil {
 #### FastTest
 
 ```protobuf
+message FastTest {
 // 验证游戏
 rpc authGame (ReqAuthGame) returns (ResAuthGame);
 // 例:
@@ -108,15 +109,15 @@ rpc authGame (ReqAuthGame) returns (ResAuthGame);
 rpc authObserve (ReqAuthObserve) returns (ResCommon);
 // 例:
 // fast.AuthObserve(context.Background(), &ReqAuthObserve{
-// 	Token: "",	// 暂时未知参数
+//   Token: "",  // 暂时未知参数
 // })
 
 // 游戏内通知, 例如玩家发表情等
 rpc broadcastInGame (ReqBroadcastInGame) returns (ResCommon);
 // 例:
 // fast.BroadcastInGame(context.Background(), &ReqBroadcastInGame{
-//	 Content: "",				// 暂时未知参数
-//	 ExceptSelf: false,	// 暂时未知参数
+//   Content: "",        // 暂时未知参数
+//   ExceptSelf: false,  // 暂时未知参数
 // })
 
 // 检查网络延迟
@@ -155,15 +156,15 @@ rpc inputChiPengGang (ReqChiPengGang) returns (ResCommon);
 // 例子为取消操作, 具体请根据实际情况选择
 // 如果不懂请看 go demo 部分
 // fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
-// 	 CancelOperation: true,
-//	 Timeuse:         timeuse,
+//    CancelOperation: true,
+//   Timeuse:         timeuse,
 // })
 
 // GM命令
 rpc inputGameGMCommand (ReqGMCommandInGaming) returns (ResCommon);
 // 例:
 // fast.InputGameGMCommand(context.Background(), &ReqGMCommandInGaming{
-// 	JsonData: "",	// 暂时未知参数
+//   JsonData: "",  // 暂时未知参数
 // })
 
 // 普通操作, 例如: 打牌、立直等
@@ -172,15 +173,15 @@ rpc inputOperation (ReqSelfOperation) returns (ResCommon);
 // 例子为打牌操作, 具体请根据实际情况选择
 // 如果不懂请看 go demo 部分
 // fast.InputOperation(context.Background(), &ReqSelfOperation{
-//	 Type: E_PlayOperation_Discard,
-//	 Tile: tile,
-//	 // !!! 真实情况中请根据是否是刚摸来的牌进行判断
-//	 // !!! 如果是刚摸来的牌直接打出去则Moqie为true
-//	 // !!! 请勿随便传, 否则会无法出牌
-//	 // !!! 这里因为是Demo所以直接把摸来的牌摸切出去了
-//	 Moqie:     moqie,
-//	 Timeuse:   timeuse,
-//	 TileState: 0,
+//   Type: E_PlayOperation_Discard,
+//   Tile: tile,
+//   // !!! 真实情况中请根据是否是刚摸来的牌进行判断
+//   // !!! 如果是刚摸来的牌直接打出去则Moqie为true
+//   // !!! 请勿随便传, 否则会无法出牌
+//   // !!! 这里因为是Demo所以直接把摸来的牌摸切出去了
+//   Moqie:     moqie,
+//   Timeuse:   timeuse,
+//   TileState: 0,
 // })
 
 // 开始观战
@@ -197,8 +198,8 @@ rpc stopObserve (ReqCommon) returns (ResCommon);
 rpc syncGame (ReqSyncGame) returns (ResSyncGame);
 // 例:
 // fast.SyncGame(context.Background(), &ReqSyncGame{
-// 	RoundId: "",	// 暂时未知参数
-// 	Step:    0,		// 暂时未知参数
+//   RoundId: "",  // 暂时未知参数
+//   Step:    0,    // 暂时未知参数
 // })
 
 // 结束游戏(仅友人房可以)
@@ -210,8 +211,9 @@ rpc terminateGame (ReqCommon) returns (ResCommon);
 rpc voteGameEnd (ReqVoteGameEnd) returns (ResGameEndVote);
 // 例:
 // fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{
-// 	Yes: true,	// 同意结束
+//   Yes: true,  // 同意结束
 // })
+}
 ```
 
 #### Lobby
