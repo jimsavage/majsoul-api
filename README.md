@@ -66,8 +66,8 @@ message ServerStream {
   bytes stream = 1;
 }
 service Notify {
-	// 这个Notify用来监听服务端给出的通知信息
-	// 例: 打牌时的实时数据
+  // 这个Notify用来监听服务端给出的通知信息
+  // 例: 打牌时的实时数据
   rpc Notify(ClientStream) returns (stream ServerStream);
 }
 ```
@@ -78,14 +78,14 @@ service Notify {
 notify := NewNotifyClient(conn)
 notifyClient, err := notify.Notify(context.Background(), &ClientStream{})
 if err == nil {
-	go func() {
-		for {
-			in, err := notifyClient.Recv()
-			if err != nil {
-				break
-			}
-		}
-	}()
+  go func() {
+    for {
+      in, err := notifyClient.Recv()
+      if err != nil {
+        break
+      }
+    }
+  }()
 }
 ```
 
