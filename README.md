@@ -97,11 +97,11 @@ rpc authGame (ReqAuthGame) returns (ResAuthGame);
 // 例:
 // fast.AuthGame(context.Background(), &ReqAuthGame{
 // 登录时获取的AccountId
-//	AccountId: respLogin.GetAccountId(),
+//  AccountId: respLogin.GetAccountId(),
 // NotifyRoomGameStart 或 NotifyMatchGameStart 时获取的 ConnectToken
-//	Token:     ConnectToken,
+//  Token:     ConnectToken,
 // 同上
-//	GameUuid:  GameUuid,
+//  GameUuid:  GameUuid,
 // })
 
 // 确认观战信息
