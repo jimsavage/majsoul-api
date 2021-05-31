@@ -10,47 +10,47 @@
 
 ```golang
 var (
-    Account  = "账号"
-    Password = "密码"
-    _        = "Token"
-    URL      = "majserver.sykj.site"
-  )
+  Account  = "账号"
+  Password = "密码"
+  _        = "Token"
+  URL      = "majserver.sykj.site"
+)
 
-  // 从雀魂Ex官方获取Client端证书
-  cert, err := tls.LoadX509KeyPair("./cer/client.pem", "./cer/client.key")
-  certPool := x509.NewCertPool()
-  ca, _ := ioutil.ReadFile("./cer/ca.crt")
-  certPool.AppendCertsFromPEM(ca)
+// 从雀魂Ex官方获取Client端证书
+cert, err := tls.LoadX509KeyPair("./cer/client.pem", "./cer/client.key")
+certPool := x509.NewCertPool()
+ca, _ := ioutil.ReadFile("./cer/ca.crt")
+certPool.AppendCertsFromPEM(ca)
 
-  creds := credentials.NewTLS(&tls.Config{
-    Certificates: []tls.Certificate{cert},
-    ServerName:   "majserver.sykj.site",
-    RootCAs:      certPool,
-  })
+creds := credentials.NewTLS(&tls.Config{
+  Certificates: []tls.Certificate{cert},
+  ServerName:   "majserver.sykj.site",
+  RootCAs:      certPool,
+})
 
-  conn, err := grpc.Dial(URL+":20009", grpc.WithTransportCredentials(creds))
-  if err != nil {
-    log.Fatal("[登录失败]: ", err)
-  }
-  defer conn.Close()
+conn, err := grpc.Dial(URL+":20009", grpc.WithTransportCredentials(creds))
+if err != nil {
+  log.Fatal("[登录失败]: ", err)
+}
+defer conn.Close()
 
-  // 登录获取AccessToken, 后续作为身份验证使用
-  lobby := NewLobbyClient(conn)
-  // 账号密码登录
-  // 普通账号密码登录
-  respLogin, err := lobby.Login(context.Background(), &ReqLogin{Account: Account, Password: Password})
-  // 账号密码登录, 附加Server Chan通知
-  // Type 0 => 旧版本
-  // Type 1 => Turbo
-  // Server Chan只需要登录时提交一次即可
-  // respLogin, err := lobby.Login(context.Background(), &ReqLogin{Account: Account, Password: Password, ServerChan: &ServerChan{Type: 1, Sendkey: "Server Chan SendKey"}})
-  // AccessToken登录
-  // respLogin, err := lobby.Oauth2Login(context.Background(), &ReqOauth2Login{AccessToken: AccessToken})
-  if err != nil {
-    log.Fatal("[登录失败]: ", err)
-  }
+// 登录获取AccessToken, 后续作为身份验证使用
+lobby := NewLobbyClient(conn)
+// 账号密码登录
+// 普通账号密码登录
+respLogin, err := lobby.Login(context.Background(), &ReqLogin{Account: Account, Password: Password})
+// 账号密码登录, 附加Server Chan通知
+// Type 0 => 旧版本
+// Type 1 => Turbo
+// Server Chan只需要登录时提交一次即可
+// respLogin, err := lobby.Login(context.Background(), &ReqLogin{Account: Account, Password: Password, ServerChan: &ServerChan{Type: 1, Sendkey: "Server Chan SendKey"}})
+// AccessToken登录
+// respLogin, err := lobby.Oauth2Login(context.Background(), &ReqOauth2Login{AccessToken: AccessToken})
+if err != nil {
+  log.Fatal("[登录失败]: ", err)
+}
 
-  log.Println("登录成功")
+log.Println("登录成功")
 ```
 
 ### RPC API
