@@ -92,7 +92,6 @@ if err == nil {
 #### FastTest
 
 ```protobuf
-message FastTest {
 // 验证游戏
 rpc authGame (ReqAuthGame) returns (ResAuthGame);
 // 例:
@@ -199,7 +198,7 @@ rpc syncGame (ReqSyncGame) returns (ResSyncGame);
 // 例:
 // fast.SyncGame(context.Background(), &ReqSyncGame{
 //   RoundId: "",  // 暂时未知参数
-//   Step:    0,    // 暂时未知参数
+//   Step:    0,   // 暂时未知参数
 // })
 
 // 结束游戏(仅友人房可以)
@@ -213,7 +212,6 @@ rpc voteGameEnd (ReqVoteGameEnd) returns (ResGameEndVote);
 // fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{
 //   Yes: true,  // 同意结束
 // })
-}
 ```
 
 #### Lobby
