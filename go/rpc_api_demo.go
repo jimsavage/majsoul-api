@@ -179,6 +179,7 @@ type MajsoulExAnalysisResult struct {
 var (
 	LastHelperResult *[]*MajsoulExAnalysisResult
 	LastDeal         string
+	NextPipei        bool
 )
 
 var (
@@ -375,6 +376,12 @@ func (t *Authentication) RequireTransportSecurity() bool {
 }
 
 func main() {
+	log.Println("开发者: 神崎·H·亚里亚")
+	log.Println("QQ群:991568358")
+	log.Println("Github: https://github.com/moxcomic/no-asura-no")
+	log.Println()
+	log.Println("正在启动服务")
+
 	go StartWebSocketServer()
 
 	var (
@@ -383,6 +390,14 @@ func main() {
 		_        = "Token"
 		URL      = "majserver.sykj.site"
 	)
+
+	log.Println("请输入雀魂账号:")
+	fmt.Scanln(&Account)
+	log.Println("请输入雀魂密码:")
+	fmt.Scanln(&Password)
+
+	Account = strings.Trim(Account, "\n")
+	Password = strings.Trim(Password, "\n")
 
 	// 从雀魂Ex官方获取Client端证书
 	cert, err := tls.LoadX509KeyPair("./cer/client.pem", "./cer/client.key")
@@ -562,13 +577,16 @@ func main() {
 					PostToHelper(respEnterGame)
 					log.Println("EnterGame", respEnterGame, err)
 					log.Println("进入对局...")
-				case "NotifyLeaderboardPoint": // 对局结束
+				case "NotifyGameEndResult": // 对局结束
 					// 进行匹配
-					// respMatchGame, err := lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
-					//   MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
-					// })
-					// log.Println("MatchGame", respMatchGame, err)
-					continue
+					if !NextPipei {
+						log.Println("取消下次匹配操作")
+						continue
+					}
+					respMatchGame, err := lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
+						MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
+					})
+					log.Println("MatchGame", respMatchGame, err)
 				case "ActionNewRound":
 					msg := &ActionNewRound{}
 					err = proto.Unmarshal(wrapper.GetData(), msg)
@@ -653,7 +671,8 @@ func main() {
 					err = proto.Unmarshal(wrapper.GetData(), msg)
 					fast.ConfirmNewRound(context.Background(), &ReqCommon{})
 				case "NotifyEndGameVote": // 方便测试, 收到投票结束立即同意投票结束对局
-					fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{Yes: true})
+					log.Println("Vote Game End")
+					log.Println(fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{Yes: true}))
 				// and more case ...
 				default:
 					log.Println("未知 Wrapper 数据:", wrapper.GetName(), "data:", wrapper.GetData())
@@ -688,7 +707,13 @@ func main() {
 			log.Println(lobby.SoftLogout(context.Background(), &ReqLogout{}))
 			break
 		}
+		if strings.Contains(line, "unpipei") {
+			NextPipei = false
+			log.Println("已取消结束后进行下次匹配")
+			continue
+		}
 		if strings.Contains(line, "pipei") {
+			NextPipei = true
 			log.Println(lobby.MatchGame(context.Background(), &ReqJoinMatchQueue{
 				MatchMode: 40, // !!! 40 修罗之战 | 不知道请勿瞎填
 			}))
