@@ -92,14 +92,16 @@ if err == nil {
 #### FastTest
 
 ```protobuf
-service FastTest {
 // 验证游戏
 rpc authGame (ReqAuthGame) returns (ResAuthGame);
 // 例:
 // fast.AuthGame(context.Background(), &ReqAuthGame{
-//	 AccountId: respLogin.GetAccountId(),	// 登录时获取的AccountId
-//	 Token:     ConnectToken,							// NotifyRoomGameStart 或 NotifyMatchGameStart 时获取的 ConnectToken
-//	 GameUuid:  GameUuid,									// 同上
+//	 // 登录时获取的AccountId
+//	 AccountId: respLogin.GetAccountId(),
+//	 // NotifyRoomGameStart 或 NotifyMatchGameStart 时获取的 ConnectToken
+//	 Token:     ConnectToken,
+//	 // 同上
+//	 GameUuid:  GameUuid,
 // })
 
 // 确认观战信息
@@ -210,7 +212,6 @@ rpc voteGameEnd (ReqVoteGameEnd) returns (ResGameEndVote);
 // fast.VoteGameEnd(context.Background(), &ReqVoteGameEnd{
 // 	Yes: true,	// 同意结束
 // })
-}
 ```
 
 #### Lobby
