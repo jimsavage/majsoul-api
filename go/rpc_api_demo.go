@@ -208,6 +208,25 @@ func GetHandTile(t string) string {
 	return "0" + t[1:]
 }
 
+func indexOf(t string) int {
+	for i, e := range Tiles {
+		if t == e {
+			return i
+		}
+	}
+	return -1
+}
+
+func removeFromHand(out []string) {
+	for _, t := range out {
+		index := indexOf(t)
+		if index == -1 {
+			continue
+		}
+		Tiles = append(Tiles[:index], Tiles[index+1:]...)
+	}
+}
+
 func StartWebSocketServer() {
 	http.Handle("/", websocket.Handler(func(conn *websocket.Conn) {
 		var err error
@@ -268,6 +287,8 @@ func doOp(op *OptionalOperationList, tile string) {
 	}
 
 	if canRiichi() {
+		removeFromHand([]string{tile})
+		log.Println("立直", tile)
 		fast.InputOperation(context.Background(), &ReqSelfOperation{
 			Type: E_PlayOperation_RiiChi,
 			Tile: tile,
@@ -285,7 +306,7 @@ func doOp(op *OptionalOperationList, tile string) {
 	for _, o := range op.GetOperationList() {
 		switch o.GetType() {
 		// 鸣牌操作时直接取消
-		case E_PlayOperation_Chi, E_PlayOperation_Pon, E_PlayOperation_Ankan, E_PlayOperation_Minkan, E_PlayOperation_Kakan:
+		case E_PlayOperation_Chi, E_PlayOperation_Minkan:
 			// 取消鸣牌操作
 			fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
 				CancelOperation: true,
@@ -295,6 +316,37 @@ func doOp(op *OptionalOperationList, tile string) {
 			//   CancelOperation: true,
 			//   Timeuse:         1,
 			// })
+		// 碰
+		case E_PlayOperation_Pon:
+			if tile[1:] == "5z" || tile[1:] == "6z" || tile[1:] == "7z" {
+				removeFromHand([]string{tile, tile})
+				fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
+					Type:    E_PlayOperation_Pon,
+					Index:   0,
+					Timeuse: timeuse,
+				})
+			} else {
+				fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
+					CancelOperation: true,
+					Timeuse:         timeuse,
+				})
+			}
+		// 加杠
+		case E_PlayOperation_Kakan:
+			removeFromHand([]string{tile})
+			fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
+				Type:    E_PlayOperation_Kakan,
+				Index:   0,
+				Timeuse: timeuse,
+			})
+		// 暗杠
+		case E_PlayOperation_Ankan:
+			removeFromHand(strings.Split(o.GetCombination()[0], "|"))
+			fast.InputOperation(context.Background(), &ReqSelfOperation{
+				Type:    E_PlayOperation_Ankan,
+				Index:   0,
+				Timeuse: timeuse,
+			})
 		// 荣和
 		case E_PlayOperation_Ron:
 			fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
@@ -316,6 +368,7 @@ func doOp(op *OptionalOperationList, tile string) {
 			})
 		// 立直
 		case E_PlayOperation_RiiChi:
+			removeFromHand([]string{tile})
 			fast.InputOperation(context.Background(), &ReqSelfOperation{
 				Type: E_PlayOperation_RiiChi,
 				Tile: tile,
@@ -329,6 +382,7 @@ func doOp(op *OptionalOperationList, tile string) {
 			})
 		// 出牌
 		case E_PlayOperation_Discard:
+			removeFromHand([]string{tile})
 			respDiscard, err := fast.InputOperation(context.Background(), &ReqSelfOperation{
 				Type: E_PlayOperation_Discard,
 				Tile: tile,
@@ -380,7 +434,7 @@ func (t *Authentication) RequireTransportSecurity() bool {
 
 func main() {
 	log.Println("开发者: 神崎·H·亚里亚")
-	log.Println("QQ群:991568358")
+	log.Println("QQ群: 991568358")
 	log.Println("Github: https://github.com/moxcomic/no-asura-no")
 	log.Println()
 	log.Println("正在启动服务")
@@ -638,23 +692,7 @@ func main() {
 						log.Println("未能解析NoTile信息")
 						continue
 					}
-					indexOf := func(t string) int {
-						for i, e := range Tiles {
-							if t == e {
-								return i
-							}
-						}
-						return -1
-					}
-					removeFromHand := func(out []string) {
-						for _, t := range out {
-							index := indexOf(t)
-							if index == -1 {
-								continue
-							}
-							Tiles = append(Tiles[:index], Tiles[index+1:]...)
-						}
-					}
+
 					removeFromHand(msg.GetOutTiles())
 					Tiles = append(Tiles, msg.GetInTiles()...)
 					op := msg.GetOperation()
