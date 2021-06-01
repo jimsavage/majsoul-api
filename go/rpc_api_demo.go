@@ -192,6 +192,9 @@ func GetHandTile(t string) string {
 	if len(Tiles) == 0 || t[0:1] != "5" {
 		return t
 	}
+	if t[1:] == "z" {
+		return t
+	}
 	i := -1
 	for e, n := range Tiles {
 		if n == t {
