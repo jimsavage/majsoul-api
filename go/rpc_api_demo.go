@@ -288,6 +288,7 @@ func doOp(op *OptionalOperationList, tile string) {
 
 	if canRiichi() {
 		removeFromHand([]string{tile})
+		LastDeal = ""
 		log.Println("立直", tile)
 		fast.InputOperation(context.Background(), &ReqSelfOperation{
 			Type: E_PlayOperation_RiiChi,
@@ -334,6 +335,7 @@ func doOp(op *OptionalOperationList, tile string) {
 		// 加杠
 		case E_PlayOperation_Kakan:
 			removeFromHand([]string{tile})
+			LastDeal = ""
 			fast.InputChiPengGang(context.Background(), &ReqChiPengGang{
 				Type:    E_PlayOperation_Kakan,
 				Index:   0,
@@ -342,6 +344,7 @@ func doOp(op *OptionalOperationList, tile string) {
 		// 暗杠
 		case E_PlayOperation_Ankan:
 			removeFromHand(strings.Split(o.GetCombination()[0], "|"))
+			LastDeal = ""
 			fast.InputOperation(context.Background(), &ReqSelfOperation{
 				Type:    E_PlayOperation_Ankan,
 				Index:   0,
@@ -369,6 +372,7 @@ func doOp(op *OptionalOperationList, tile string) {
 		// 立直
 		case E_PlayOperation_RiiChi:
 			removeFromHand([]string{tile})
+			LastDeal = ""
 			fast.InputOperation(context.Background(), &ReqSelfOperation{
 				Type: E_PlayOperation_RiiChi,
 				Tile: tile,
@@ -383,6 +387,7 @@ func doOp(op *OptionalOperationList, tile string) {
 		// 出牌
 		case E_PlayOperation_Discard:
 			removeFromHand([]string{tile})
+			LastDeal = ""
 			respDiscard, err := fast.InputOperation(context.Background(), &ReqSelfOperation{
 				Type: E_PlayOperation_Discard,
 				Tile: tile,
